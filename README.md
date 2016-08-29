@@ -10,7 +10,7 @@ This is a tiny search engine uses 3 levels of cache
 Build 
 -----
 
-[![Build Status](https://travis-ci.org/nsaravanas/my-space.svg?branch=master)](https://travis-ci.org/nsaravanas/my-space)
+[![Build Status](https://travis-ci.org/nsaravanas/search-engine.svg?branch=master)](https://travis-ci.org/nsaravanas/search-engine)
 
 Technologies
 ----
