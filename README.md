@@ -26,11 +26,11 @@ Technologies
 REST Endpoints
 --------------
  1. [initialize](#1initialize)
- 2. getall
- 3. save
- 4. search
- 5. delete
- 6. clear
+ 2. [getall](#2get-all)
+ 3. [save](#3save)
+ 4. [search](#4search)
+ 5. [delete](#5delete)
+ 6. [clear](#6clear)
  
  
 End point usage
