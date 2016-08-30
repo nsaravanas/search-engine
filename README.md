@@ -473,4 +473,4 @@ GET /clear
 License
 ------
 
-see the LICENSE.md file for details
+see the [LICENSE](LICENSE) file for details
