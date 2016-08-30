@@ -25,7 +25,7 @@ Technologies
 
 REST Endpoints
 --------------
- 1. initialize
+ 1. [initialize](#1initialize)
  2. getall
  3. save
  4. search
