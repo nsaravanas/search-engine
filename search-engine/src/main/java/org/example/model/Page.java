@@ -10,16 +10,20 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Indexed
 public class Page {
 
 	@Id
+	@NotNull
+	@NotEmpty
 	private String name;
 
 	@Column
@@ -34,9 +38,10 @@ public class Page {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Field
 	@IndexedEmbedded
+	@NotEmpty
 	private List<String> tags;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
 	private List<Page> subPages;
 
 	public Page() {
