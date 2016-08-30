@@ -24,7 +24,7 @@ public class PageSearchRepository {
 	@Autowired
 	private EntityManagerFactory factory;
 
-	@Value("${query.max.result}")
+	@Value("${max.page.result}")
 	private int maxResult;
 
 	private FullTextEntityManager fullTextEntityManager;
@@ -55,7 +55,7 @@ public class PageSearchRepository {
 		QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(Page.class).get();
 		Query luceneQuery = queryBuilder.keyword().onFields("tags").matching(queryString.replaceAll("_", " ")).createQuery();
 		javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Page.class);
-		return (List<Page>) jpaQuery.setMaxResults(maxResult).getResultList();
+		return (List<Page>) jpaQuery.setMaxResults(maxResult * 4).getResultList();
 	}
 
 	@PreDestroy

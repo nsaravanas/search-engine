@@ -2,6 +2,7 @@ package org.example.service;
 
 import static java.util.Arrays.asList;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.example.model.Page;
@@ -20,6 +21,9 @@ public class SearchEngineTest {
 
 	@Value("${max.weight}")
 	private int maxWeight;
+
+	@Value("${max.page.result}")
+	private int maxResult;
 
 	@Autowired
 	private SearchEngine searchEngine;
@@ -54,10 +58,11 @@ public class SearchEngineTest {
 		page7.setName("P7");
 		page7.setTags(asList("Car", "Ford"));
 
-		String[][] queries = { { "Ford" }, { "Car" }, { "Review" }, { "Ford", "Review" }, { "Ford", "Car" }, { "cooking", "French" } };
+		String[][] queries = { { "Ford" }, { "Car" }, { "Review" }, { "Ford", "Review" }, { "Ford", "Car" },
+				{ "cooking", "French" } };
 
-		String[][] expecteds = { { "P1", "P3" }, { "P6", "P1", "P2", "P4", "P5" }, { "P2", "P3", "P1" }, { "P3", "P1", "P2" },
-				{ "P1", "P3", "P6", "P2", "P4", "P5" }, {} };
+		String[][] expecteds = { { "P1", "P3" }, { "P6", "P1", "P2", "P4", "P5" }, { "P2", "P3", "P1" },
+				{ "P3", "P1", "P2" }, { "P1", "P3", "P6", "P2", "P4", "P5" }, {} };
 
 		List<Page> pages = asList(page1, page2, page3, page4, page5, page6);
 
@@ -65,7 +70,7 @@ public class SearchEngineTest {
 			String[] actual = this.searchEngine.indexing(pages, queries[i]).stream().map(Page::getName).toArray(String[]::new);
 			String[] expected = expecteds[i];
 			Assert.assertNotNull(actual);
-			Assert.assertArrayEquals(expected, actual);
+			Assert.assertArrayEquals(Arrays.stream(expected).limit(maxResult).toArray(), actual);
 		}
 	}
 

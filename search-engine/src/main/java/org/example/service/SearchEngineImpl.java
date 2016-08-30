@@ -1,11 +1,10 @@
 package org.example.service;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+import static java.util.Comparator.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +20,9 @@ public class SearchEngineImpl implements SearchEngine {
 
 	@Value("${max.weight}")
 	private int maxWeight;
+
+	@Value("${max.page.result}")
+	private int maxResult;
 
 	@Autowired
 	private SearchEngineOptimization engineOptimization;
@@ -57,9 +59,13 @@ public class SearchEngineImpl implements SearchEngine {
 			if (page.getWeight() != 0)
 				matchedPages.add(page);
 		}
-		matchedPages.sort(Comparator.comparingInt(Page::getWeight).reversed());
-		addToCache(queryString, matchedPages);
-		return matchedPages;
+		List<Page> result = matchedPages.stream().sorted(comparingInt(Page::getWeight).reversed()).limit(maxResult)
+				.collect(toList());
+
+		if (!result.isEmpty()) {
+			addToCache(queryString, result);
+		}
+		return result;
 	}
 
 	@Override
@@ -70,10 +76,13 @@ public class SearchEngineImpl implements SearchEngine {
 	@Override
 	public int calculateWeight(List<String> queryTags, List<String> pageTags) {
 		final AtomicInteger ai = new AtomicInteger(maxWeight);
-		Map<String, Integer> queryMap = queryTags.stream().distinct().limit(maxWeight).collect(toMap(tag -> tag, value -> ai.getAndDecrement()));
+		Map<String, Integer> queryMap = queryTags.stream().distinct().limit(maxWeight)
+				.collect(toMap(tag -> tag, value -> ai.getAndDecrement()));
 		ai.set(maxWeight);
-		Map<String, Integer> pageMap = pageTags.stream().distinct().limit(maxWeight).collect(toMap(tag -> tag, value -> ai.getAndDecrement()));
-		return queryMap.keySet().stream().filter(pageMap::containsKey).mapToInt(key -> queryMap.get(key) * pageMap.get(key)).sum();
+		Map<String, Integer> pageMap = pageTags.stream().distinct().limit(maxWeight)
+				.collect(toMap(tag -> tag, value -> ai.getAndDecrement()));
+		return queryMap.keySet().stream().filter(pageMap::containsKey)
+				.mapToInt(key -> queryMap.get(key) * pageMap.get(key)).sum();
 	}
 
 	@Deprecated
