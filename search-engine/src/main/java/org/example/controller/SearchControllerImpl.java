@@ -11,11 +11,14 @@ import org.example.model.Error;
 import org.example.model.Page;
 import org.example.model.search.SearchGetRequest;
 import org.example.service.SearchService;
+import org.hibernate.search.exception.EmptyQueryException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -78,10 +81,21 @@ public class SearchControllerImpl implements SearchController {
 	}
 
 	@ExceptionHandler(Throwable.class)
-	@RequestMapping(value = "/error", method = RequestMethod.GET)
-	public Error exceptionHandler(Exception ex) {
+	@ResponseStatus(value = HttpStatus.CONFLICT)
+	public Error globalExceptionHandler(Exception ex) {
 		Error error = new Error();
 		error.setMessage("Error occured");
+		error.setExceptionMessage(ex.getMessage());
+		error.setAction("Check logs");
+		return error;
+	}
+
+	@ExceptionHandler(EmptyQueryException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public Error emptyQueryExceptionHandler(Exception ex) {
+		Error error = new Error();
+		ex.printStackTrace();
+		error.setMessage("Empty query string passed");
 		error.setExceptionMessage(ex.getMessage());
 		error.setAction("Check logs");
 		return error;
