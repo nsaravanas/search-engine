@@ -12,6 +12,16 @@ Build
 
 [![Build Status](https://travis-ci.org/nsaravanas/search-engine.svg?branch=master)](https://travis-ci.org/nsaravanas/search-engine)
 
+Installation
+------------
+
+	java -jar search-engine-{version}.jar
+
+Built With
+----------
+
+ - Maven
+
 Technologies
 ----
 
@@ -459,3 +469,8 @@ GET /clear
   "lucene_indices": true
 }
 ```
+
+License
+------
+
+see the LICENSE.md file for details
