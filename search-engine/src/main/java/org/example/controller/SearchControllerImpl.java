@@ -50,7 +50,7 @@ public class SearchControllerImpl implements SearchController {
 	}
 
 	@Override
-	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public Map<String, Boolean> delete(@RequestBody List<String> pageNames) {
 		boolean bool = this.searchService.delete(pageNames);
 		Map<String, Boolean> result = new HashMap<>();
