@@ -8,3 +8,5 @@ script: mvn clean install -DskipTests=false -Dmaven.javadoc.skip=true
 #  provider: heroku
 #  api_key:
 #    secure: 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
