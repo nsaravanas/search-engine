@@ -72,4 +72,6 @@ public interface SearchEngineOptimization {
 
 	}
 
+	void removeOldQueriesFromCache();
+
 }

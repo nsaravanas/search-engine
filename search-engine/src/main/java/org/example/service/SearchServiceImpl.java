@@ -2,7 +2,6 @@ package org.example.service;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +44,7 @@ public class SearchServiceImpl implements SearchService {
 		
 		List<String> queryList = search.getTags().stream().filter(tag -> !tag.isEmpty()).map(String::toLowerCase).collect(toList());
 		if(queryList.isEmpty())
-			return new ArrayList<>();
+			throw new IllegalArgumentException("One search tag must present atleast");
 		
 		String queryString = SearchEngineImpl.getQueryString(queryList);
 

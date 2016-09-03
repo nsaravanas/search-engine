@@ -11,7 +11,6 @@ import org.example.model.Error;
 import org.example.model.Page;
 import org.example.model.search.SearchGetRequest;
 import org.example.service.SearchService;
-import org.hibernate.search.exception.EmptyQueryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -80,22 +79,11 @@ public class SearchControllerImpl implements SearchController {
 		return result;
 	}
 
-	@ExceptionHandler(Throwable.class)
+	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value = HttpStatus.CONFLICT)
 	public Error globalExceptionHandler(Exception ex) {
 		Error error = new Error();
 		error.setMessage("Error occured");
-		error.setExceptionMessage(ex.getMessage());
-		error.setAction("Check logs");
-		return error;
-	}
-
-	@ExceptionHandler(EmptyQueryException.class)
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public Error emptyQueryExceptionHandler(Exception ex) {
-		Error error = new Error();
-		ex.printStackTrace();
-		error.setMessage("Empty query string passed");
 		error.setExceptionMessage(ex.getMessage());
 		error.setAction("Check logs");
 		return error;

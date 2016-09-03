@@ -28,10 +28,6 @@ public class SearchEngineImpl implements SearchEngine {
 	@Autowired
 	private SearchEngineOptimization engineOptimization;
 
-	public void setEngineOptimization(SearchEngineOptimization engineOptimization) {
-		this.engineOptimization = engineOptimization;
-	}
-
 	@Override
 	public SearchEngineOptimization getEngineOptimization() {
 		return engineOptimization;

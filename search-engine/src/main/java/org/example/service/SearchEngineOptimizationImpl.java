@@ -39,6 +39,7 @@ public class SearchEngineOptimizationImpl implements SearchEngineOptimization {
 	}
 
 	@Scheduled(fixedDelay = 15 * 60 * 1000) // remove 20% of old entries
+	@Override
 	public void removeOldQueriesFromCache() {
 		CACHE.keySet().stream().sorted(comparing(Key::getLastAccessed)).limit((int) (cacheSize * .2)).forEach(CACHE::remove);
 	}

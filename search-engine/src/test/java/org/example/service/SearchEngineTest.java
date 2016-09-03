@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +38,9 @@ public class SearchEngineTest {
 	@Autowired
 	private SearchEngine searchEngine;
 
+	@Mock
+	private SearchService searchServiceMock;
+
 	@Test
 	public void testInitialize() {
 		List<Page> pages = (List<Page>) this.restTemplate.getForObject("/initialize", Map.class).get("pages");
@@ -59,17 +63,27 @@ public class SearchEngineTest {
 		request.setSearch(search);
 		List<Page> pages = (List<Page>) this.restTemplate.postForObject("/search", request, Map.class).get("pages");
 		Assertions.assertThat(pages.size()).isEqualTo(2);
-		search.setTags(Arrays.asList());
 		pages = (List<Page>) this.restTemplate.postForObject("/search", request, Map.class).get("pages");
-		Assertions.assertThat(pages.size()).isEqualTo(0);
+		Assertions.assertThat(pages.size()).isEqualTo(2);
 		search.setCache(true);
 		search.setIndex(false);
 		pages = (List<Page>) this.restTemplate.postForObject("/search", request, Map.class).get("pages");
-		Assertions.assertThat(pages.size()).isEqualTo(0);
+		Assertions.assertThat(pages.size()).isEqualTo(2);
 		search.setCache(false);
 		search.setIndex(true);
 		pages = (List<Page>) this.restTemplate.postForObject("/search", request, Map.class).get("pages");
-		Assertions.assertThat(pages.size()).isEqualTo(0);
+		Assertions.assertThat(pages.size()).isEqualTo(2);
+	}
+
+	@Test
+	public void searchWithNoTags() {
+		SearchGetRequest request = new SearchGetRequest();
+		Search search = new Search();
+		search.setCache(false);
+		search.setIndex(false);
+		search.setTags(Arrays.asList());
+		request.setSearch(search);
+		this.restTemplate.postForObject("/search", request, Map.class);
 	}
 
 	@Test
@@ -79,15 +93,13 @@ public class SearchEngineTest {
 		page.setUrl("www.test.com");
 		page.setTags(Arrays.asList("test", "page"));
 		page.setWeight(10);
-		List<String> pageNames = (List<String>) this.restTemplate.postForObject("/save", Arrays.asList(page), Map.class)
-				.get("saved_pages");
+		List<String> pageNames = (List<String>) this.restTemplate.postForObject("/save", Arrays.asList(page), Map.class).get("saved_pages");
 		Assertions.assertThat(pageNames).isEqualTo(Arrays.asList("Page1"));
 	}
 
 	@Test
 	public void testDelete() {
-		boolean deleted = (boolean) this.restTemplate.postForObject("/delete", Arrays.asList("P1,P2"), Map.class)
-				.get("delete_success");
+		boolean deleted = (boolean) this.restTemplate.postForObject("/delete", Arrays.asList("P1,P2"), Map.class).get("delete_success");
 		Assertions.assertThat(deleted).isEqualTo(true);
 	}
 
@@ -146,18 +158,18 @@ public class SearchEngineTest {
 
 	@Test
 	public void testWeightCalculation() {
-		Assert.assertEquals(113,
-				this.searchEngine.calculateWeight(asList("Ford", "Car", "Review"), asList("Ford", "Car")));
+		Assert.assertEquals(113, this.searchEngine.calculateWeight(asList("Ford", "Car", "Review"), asList("Ford", "Car")));
 		Assert.assertEquals(49, this.searchEngine.calculateWeight(asList("Toyota", "Car"), asList("Ford", "Car")));
 		Assert.assertEquals(112, this.searchEngine.calculateWeight(asList("Car", "Ford"), asList("Ford", "Car")));
-		Assert.assertEquals(106,
-				this.searchEngine.calculateWeight(asList("Ford", "Car", "Review"), asList("Ford", "Review")));
+		Assert.assertEquals(106, this.searchEngine.calculateWeight(asList("Ford", "Car", "Review"), asList("Ford", "Review")));
 		Assert.assertEquals(0, this.searchEngine.calculateWeight(asList("Toyota", "Car"), asList("Ford", "Review")));
 		Assert.assertEquals(56, this.searchEngine.calculateWeight(asList("Car", "Ford"), asList("Ford", "Review")));
 	}
 
 	@After
 	public void destroy() {
+		this.searchEngine.getEngineOptimization().removeOldQueriesFromCache();
 		this.searchEngine.getEngineOptimization().getCache().clear();
 	}
+
 }
