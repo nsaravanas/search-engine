@@ -1,1 +1,4 @@
 /target/
+/.travis.yml
+/pom.xml
+/.gitignore
