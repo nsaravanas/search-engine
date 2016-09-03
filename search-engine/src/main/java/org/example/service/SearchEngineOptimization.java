@@ -27,6 +27,14 @@ public interface SearchEngineOptimization {
 			this.lastAccessed = lastAccessed;
 		}
 
+		public Key(String query) {
+			this.query = query;
+		}
+
+		public Key() {
+
+		}
+
 		public String getQuery() {
 			return query;
 		}
