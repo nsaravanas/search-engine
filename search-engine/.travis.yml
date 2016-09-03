@@ -10,4 +10,3 @@ script: mvn clean install -DskipTests=false -Dmaven.javadoc.skip=true
 #    secure: 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - mvn clean cobertura:cobertura coveralls:report
