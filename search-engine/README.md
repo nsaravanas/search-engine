@@ -12,6 +12,11 @@ Build
 
 [![Build Status](https://travis-ci.org/nsaravanas/my-space.svg?branch=master)](https://travis-ci.org/nsaravanas/my-space)
 
+Code coverage
+-------------
+
+[![Coverage Status](https://coveralls.io/repos/github/nsaravanas/search-engine/badge.svg?branch=master)](https://coveralls.io/github/nsaravanas/search-engine?branch=master)
+
 Technologies
 ----
 
