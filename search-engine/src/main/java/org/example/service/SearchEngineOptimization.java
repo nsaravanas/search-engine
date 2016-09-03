@@ -21,15 +21,6 @@ public interface SearchEngineOptimization {
 
 		private LocalDateTime lastAccessed;
 
-		public Key() {
-			super();
-		}
-
-		public Key(String query) {
-			super();
-			this.query = query;
-		}
-
 		public Key(String query, LocalDateTime lastAccessed) {
 			super();
 			this.query = query;

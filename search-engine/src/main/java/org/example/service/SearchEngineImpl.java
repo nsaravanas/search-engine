@@ -1,11 +1,12 @@
 package org.example.service;
 
-import static java.util.stream.Collectors.*;
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import static java.util.Comparator.*;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,16 +35,6 @@ public class SearchEngineImpl implements SearchEngine {
 	@Override
 	public SearchEngineOptimization getEngineOptimization() {
 		return engineOptimization;
-	}
-
-	@Override
-	public Map<String, List<Page>> indexing(List<Page> pages, List<List<String>> queries) {
-		Map<String, List<Page>> indexed = new LinkedHashMap<>();
-		for (List<String> queryTags : queries) {
-			String queryString = getQueryString(queryTags);
-			indexed.put(queryString, indexing(pages, queryTags, queryString));
-		}
-		return indexed;
 	}
 
 	@Override

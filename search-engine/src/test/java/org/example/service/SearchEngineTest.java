@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.example.model.Page;
 import org.example.model.search.Search;
 import org.example.model.search.SearchGetRequest;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,6 +63,10 @@ public class SearchEngineTest {
 		pages = (List<Page>) this.restTemplate.postForObject("/search", request, Map.class).get("pages");
 		Assertions.assertThat(pages.size()).isEqualTo(0);
 		search.setCache(true);
+		search.setIndex(false);
+		pages = (List<Page>) this.restTemplate.postForObject("/search", request, Map.class).get("pages");
+		Assertions.assertThat(pages.size()).isEqualTo(0);
+		search.setCache(false);
 		search.setIndex(true);
 		pages = (List<Page>) this.restTemplate.postForObject("/search", request, Map.class).get("pages");
 		Assertions.assertThat(pages.size()).isEqualTo(0);
@@ -151,4 +156,8 @@ public class SearchEngineTest {
 		Assert.assertEquals(56, this.searchEngine.calculateWeight(asList("Car", "Ford"), asList("Ford", "Review")));
 	}
 
+	@After
+	public void destroy() {
+		this.searchEngine.getEngineOptimization().getCache().clear();
+	}
 }
